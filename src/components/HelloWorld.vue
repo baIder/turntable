@@ -8,7 +8,7 @@
                         @click="handleAreaClick(item.id,$event)"
                         class="text-wrapper"
                 >
-                    <div class="text" :class="`char${item.name.length}`">
+                    <div class="text" :class="`char${item.name.length}`" ref="areaRefs">
                         <span v-for="n in item.name.length" :key="n">{{ item.name[n - 1] }}</span>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                         @click="handlePosClick(item.id,$event)"
                         class="text-wrapper"
                 >
-                    <div class="text" :class="`char${item.name.length}`">
+                    <div class="text" :class="`char${item.name.length}`" ref="posRefs">
                         <span v-for="n in item.name.length" :key="n">{{ item.name[n - 1] }}</span>
                     </div>
                 </div>
@@ -77,6 +77,11 @@ export default {
             areaArr: [],
             currentArea: {},
             currentPos: {},
+            Yb: 0,
+            Xb: 0,
+            touching: false,
+            oldDeg: 0,
+            currentMenu: undefined,
         }
     },
     methods: {
@@ -130,6 +135,35 @@ export default {
                 }
             })
         },
+        handleTouchStart(e) {
+            this.currentMenu = e.target.parentNode.parentNode
+            this.Xb = e.touches[0].clientX
+            this.Yb = e.touches[0].clientY
+            document.addEventListener('touchmove', this.handleTouchMove)
+            document.addEventListener('touchend', this.handleTouchEnd)
+            this.currentMenu.classList.add('on-touch')
+            if (this.currentMenu.style.rotate !== '') this.oldDeg = parseFloat(this.currentMenu.style.rotate)
+        },
+        handleTouchMove(e) {
+            const Xc = e.touches[0].clientX
+            const Yc = e.touches[0].clientY
+            const Xa = document.documentElement.clientWidth / 2
+            const Ya = document.documentElement.clientHeight * 1.14
+            const b2 = Math.pow(Xc - Xa, 2) + Math.pow(Yc - Ya, 2)
+            const c2 = Math.pow(this.Xb - Xa, 2) + Math.pow(this.Yb - Ya, 2)
+            const a2 = Math.pow(Xc - this.Xb, 2) + Math.pow(Yc - this.Yb, 2)
+            const cosA = (b2 + c2 - a2) / (2 * Math.sqrt(b2) * Math.sqrt(c2))
+            const A = Math.acos(cosA)
+            const deltaDeg = this.Xb - Xc < 0 ? this.oldDeg + (A * 180 / Math.PI) : this.oldDeg - (A * 180 / Math.PI)
+            this.currentMenu.style.rotate = deltaDeg + 'deg'
+        },
+        handleTouchEnd() {
+            this.Xb = 0
+            this.Yb = 0
+            document.removeEventListener('touchmove', this.handleTouchMove)
+            document.removeEventListener('touchend', this.handleTouchEnd)
+            this.currentMenu.classList.remove('on-touch')
+        },
         init() {
             this.areaArr = mockData()
             this.currentArea = this.areaArr[0]
@@ -142,6 +176,14 @@ export default {
                 setTimeout(() => {
                     this.$refs.menuRef.classList.remove('init')
                 }, 100)
+                let areaArr = Array.from(this.$refs.areaRefs)
+                areaArr.forEach(el => {
+                    el.addEventListener('touchstart', this.handleTouchStart)
+                })
+                areaArr = Array.from(this.$refs.posRefs)
+                areaArr.forEach(el => {
+                    el.addEventListener('touchstart', this.handleTouchStart)
+                })
             })
         },
     },
@@ -222,6 +264,10 @@ export default {
     -webkit-transform-style: preserve-3d;
     transform-origin: 50% 100%;
     transition: all .5s ease-in-out;
+
+    &.on-touch {
+      transition: none 0s ease 0s;
+    }
 
     > .text-wrapper {
       position: absolute;

@@ -23,5 +23,6 @@ export default {
     background: url("@/assets/bg.jpg") no-repeat;
     background-size: cover;
     user-select: none;
+    overflow: hidden;
 }
 </style>
