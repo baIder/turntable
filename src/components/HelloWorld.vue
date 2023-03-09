@@ -32,6 +32,10 @@
             <div class="controller controller-lv1"/>
             <div class="controller controller-lv2"/>
             <div class="controller controller-lv3"/>
+            <div class="panel-wrapper">
+                <div class="btn-panel" tips="更多功能"/>
+            </div>
+            <div class="btn-switch"/>
         </div>
     </div>
 </template>
@@ -73,7 +77,7 @@ export default {
                     el.children[0].dataset.rotate = '0'
                     el.dataset.rotate = '0'
                 } else {
-                    const deg = Number(posArr[index - 1].dataset.rotate) + (this.currentArea.children[index].name.length + this.currentArea.children[index - 1].name.length) * 1.5 + 3
+                    const deg = Number(posArr[index - 1].dataset.rotate) + (this.currentArea.children[index].name.length + this.currentArea.children[index - 1].name.length) * 1.5 + 1
                     el.children[0].dataset.rotate = deg.toString()
                     el.dataset.rotate = deg.toString()
                     el.style.rotate = deg + 'deg'
@@ -209,6 +213,48 @@ export default {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     z-index: 1;
+  }
+
+  > .btn-switch {
+    background: url(@/assets/switch.png) no-repeat scroll center center;
+    background-size: 100%;
+    position: absolute;
+    transition: all .8s ease-in-out;
+    z-index: 100;
+    pointer-events: visible;
+    cursor: pointer;
+    width: 6.4vh;
+    height: 8.4vh;
+    left: calc(50% - 3.2vh);
+    bottom: 16.2vh;
+  }
+
+  > .panel-wrapper {
+    > .btn-panel {
+      background: url(@/assets/panel.png) no-repeat scroll center center;
+      background-size: 100%;
+      position: absolute;
+      transition: all .8s ease-in-out;
+      z-index: 100;
+      pointer-events: visible;
+      cursor: pointer;
+      width: 4.3vh;
+      height: 4.3vh;
+      left: calc(50% - 10.15vh);
+      bottom: 18vh;
+
+      &::after {
+        content: attr(tips);
+        position: absolute;
+        color: #fff;
+        left: 50%;
+        transform: translateX(-50%);
+        top: calc(100% + 2px);
+        text-align: center;
+        font-size: 1.4vh;
+        width: max-content;
+      }
+    }
   }
 }
 
