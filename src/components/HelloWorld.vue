@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <div class="menu-wrapper">
+        <div class="menu-wrapper" ref="menuRef">
             <div class="menu data-area" ref="dataArea">
                 <span
                         v-for="(item) in areaArr"
@@ -32,10 +32,8 @@
             <div class="controller controller-lv1"/>
             <div class="controller controller-lv2"/>
             <div class="controller controller-lv3"/>
-            <div class="panel-wrapper">
-                <div class="btn-panel" tips="更多功能"/>
-            </div>
-            <div class="btn-switch"/>
+            <div class="btn-panel" tips="更多功能"/>
+            <div class="btn-switch" @click="toggleMenu"/>
         </div>
     </div>
 </template>
@@ -69,6 +67,9 @@ export default {
             this.currentPos = this.currentArea.children.find(i => i.id === id)
             toggleActive({ev})
             this.$refs.dataPos.style.rotate = -Number(ev.target.dataset.rotate) + 'deg'
+        },
+        toggleMenu() {
+            this.$refs.menuRef.classList.toggle('hidden')
         },
         calcPosDeg() {
             const posArr = Array.from(this.$refs.dataPos.children)
@@ -119,7 +120,32 @@ export default {
 <style lang="scss" scoped>
 .menu-wrapper {
   position: relative;
+  transition: all .5s ease-in-out;
   transform: translateY(14vh);
+
+  &.hidden {
+    transform: translateY(20vh);
+
+    > .menu {
+      height: .1vh;
+    }
+
+    > .btn-panel {
+      opacity: 0;
+    }
+
+    > .controller-lv1 {
+      backdrop-filter: saturate(150%) contrast(80%) blur(3px);
+    }
+
+    > .controller-lv2 {
+      height: .1vh;
+    }
+
+    > .controller-lv3 {
+      height: .1vh;
+    }
+  }
 
   > .data-area {
     height: 32vh;
@@ -143,7 +169,7 @@ export default {
     border-radius: 50% 50% 0 0;
     -webkit-transform-style: preserve-3d;
     transform-origin: 50% 100%;
-    transition: all 750ms ease-in-out;
+    transition: all .5s ease-in-out;
 
     > .text-wrapper {
       position: absolute;
@@ -213,13 +239,14 @@ export default {
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 50%;
     z-index: 1;
+    transition: all .5s ease-in-out;
   }
 
   > .btn-switch {
     background: url(@/assets/switch.png) no-repeat scroll center center;
     background-size: 100%;
     position: absolute;
-    transition: all .8s ease-in-out;
+    transition: transform .8s ease-in-out, scale 50ms ease-in-out;
     z-index: 100;
     pointer-events: visible;
     cursor: pointer;
@@ -227,33 +254,39 @@ export default {
     height: 8.4vh;
     left: calc(50% - 3.2vh);
     bottom: 16.2vh;
+
+    &:active:hover {
+      scale: 0.98;
+    }
   }
 
-  > .panel-wrapper {
-    > .btn-panel {
-      background: url(@/assets/panel.png) no-repeat scroll center center;
-      background-size: 100%;
-      position: absolute;
-      transition: all .8s ease-in-out;
-      z-index: 100;
-      pointer-events: visible;
-      cursor: pointer;
-      width: 4.3vh;
-      height: 4.3vh;
-      left: calc(50% - 10.15vh);
-      bottom: 18vh;
+  > .btn-panel {
+    background: url(@/assets/panel.png) no-repeat;
+    background-size: cover;
+    position: absolute;
+    transition: transform .5s ease-in-out, scale .1s ease-in-out, opacity .5s ease-in-out;
+    z-index: 100;
+    pointer-events: visible;
+    cursor: pointer;
+    width: 4.3vh;
+    height: 4.3vh;
+    left: calc(50% - 10.15vh);
+    bottom: 18vh;
 
-      &::after {
-        content: attr(tips);
-        position: absolute;
-        color: #fff;
-        left: 50%;
-        transform: translateX(-50%);
-        top: calc(100% + 2px);
-        text-align: center;
-        font-size: 1.4vh;
-        width: max-content;
-      }
+    &:active:hover {
+      scale: 0.98;
+    }
+
+    &::after {
+      content: attr(tips);
+      position: absolute;
+      color: #fff;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(100% + 2px);
+      text-align: center;
+      font-size: 1.4vh;
+      width: max-content;
     }
   }
 }
