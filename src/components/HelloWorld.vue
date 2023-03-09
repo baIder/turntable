@@ -2,28 +2,28 @@
     <div class="root">
         <div class="menu-wrapper init" ref="menuRef">
             <div class="menu data-area" ref="dataArea">
-                <span
+                <div
                         v-for="item in areaArr"
                         :key="item.id"
                         @click="handleAreaClick(item.id,$event)"
                         class="text-wrapper"
                 >
-                    <span>
-                        {{ item.name }}
-                    </span>
-                </span>
+                    <div class="text" :class="`char${item.name.length}`">
+                        <span v-for="n in item.name.length" :key="n">{{ item.name[n - 1] }}</span>
+                    </div>
+                </div>
             </div>
             <div class="menu data-pos" ref="dataPos">
-                <span
+                <div
                         v-for="item in currentArea.children"
                         :key="item.id"
                         @click="handlePosClick(item.id,$event)"
                         class="text-wrapper"
                 >
-                    <span>
-                        {{ item.name }}
-                    </span>
-                </span>
+                    <div class="text" :class="`char${item.name.length}`">
+                        <span v-for="n in item.name.length" :key="n">{{ item.name[n - 1] }}</span>
+                    </div>
+                </div>
             </div>
             <div class="controller controller-lv1"/>
             <div class="controller controller-lv2"/>
@@ -123,7 +123,7 @@ export default {
                     el.children[0].dataset.rotate = '0'
                     el.dataset.rotate = '0'
                 } else {
-                    const deg = Number(areaArr[index - 1].dataset.rotate) + (this.areaArr[index].name.length + this.areaArr[index - 1].name.length) * 1.5
+                    const deg = Number(areaArr[index - 1].dataset.rotate) + (this.areaArr[index].name.length + this.areaArr[index - 1].name.length) * 1.5 + 3
                     el.children[0].dataset.rotate = deg.toString()
                     el.dataset.rotate = deg.toString()
                     el.style.rotate = deg + 'deg'
@@ -152,6 +152,47 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@for $i from 3 through 6 {
+  .char#{$i} {
+    @for $j from 1 through $i {
+      > span:nth-child(#{$j}) {
+        transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+        @if ($i==4) {
+          @if (($j == 1) or ($j==4)) {
+            transform: translateY(1px) rotate(#{-2 * $i + 4 * $j - 2}deg);
+          } @else {
+            transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+          }
+        }
+        @if ($i==5) {
+          @if (($j==1) or ($j==5)) {
+            transform: translateY(2px) rotate(#{-2 * $i + 4 * $j - 2}deg);
+          } @else {
+            transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+          }
+        }
+        @if ($i==6) {
+          @if (($j==1) or ($j==6)) {
+            transform: translateY(3px) rotate(#{-2 * $i + 4 * $j - 2}deg);
+          } @else if (($j==2) or ($j==5)) {
+            transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+          } @else {
+            transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+          }
+        }
+      }
+    }
+  }
+}
+
+.text {
+  > span {
+    pointer-events: none;
+    transform-origin: 50% 100%;
+    display: inline-block;
+  }
+}
+
 .menu-wrapper {
   position: relative;
   transition: all .5s ease-in-out;
@@ -191,7 +232,7 @@ export default {
       transform-origin: 50% 100%;
       pointer-events: none;
 
-      > span {
+      > div {
         padding: 1.4vh;
         font-size: 1.6vh;
         cursor: pointer;
@@ -203,12 +244,12 @@ export default {
         position: relative;
       }
 
-      > span {
+      > div {
         transition: all 1s ease-in-out;
       }
 
       > &.active {
-        > span {
+        > div {
           color: white;
           font-weight: 700;
           transform: translateY(-7px);
