@@ -32,8 +32,38 @@
             <div class="controller controller-lv1"/>
             <div class="controller controller-lv2"/>
             <div class="controller controller-lv3"/>
-            <div class="btn-panel" tips="更多功能"/>
+            <div class="btn-panel" tips="更多功能" @click="togglePanel"/>
             <div class="btn-switch" @click="toggleMenu"/>
+        </div>
+        <div class="panel hidden" ref="panelRef">
+            <div class="title">
+                更多功能
+                <span @click="togglePanel">
+                <SvgClose/>
+                </span>
+            </div>
+            <div class="body">
+                <div class="btn-function">
+                    <div class="fullscreen"></div>
+                    <span>全屏切换</span>
+                </div>
+                <div class="btn-function">
+                    <div class="vr"></div>
+                    <span>VR视觉</span>
+                </div>
+                <div class="btn-function">
+                    <div class="gyro"></div>
+                    <span>陀螺仪</span>
+                </div>
+                <div class="btn-function">
+                    <div class="music"></div>
+                    <span>背景音乐</span>
+                </div>
+                <div class="btn-function">
+                    <div class="commentary"></div>
+                    <span>场景解说</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -41,9 +71,11 @@
 <script>
 import {mockData} from '@/data'
 import {toggleActive} from '@/utils/toggleActive'
+import SvgClose from '@/components/SvgClose.vue'
 
 export default {
     name: 'HelloWorld',
+    components: {SvgClose},
     data() {
         return {
             areaArr: [],
@@ -70,6 +102,10 @@ export default {
         },
         toggleMenu() {
             this.$refs.menuRef.classList.toggle('hidden')
+        },
+        togglePanel() {
+            console.log(1)
+            this.$refs.panelRef.classList.toggle('hidden')
         },
         calcPosDeg() {
             const posArr = Array.from(this.$refs.dataPos.children)
@@ -129,13 +165,11 @@ export default {
   > .data-area {
     height: 32vh;
     z-index: 11;
-
   }
 
   > .data-pos {
     height: 37vh;
     z-index: 10;
-
   }
 
   > .menu {
@@ -302,6 +336,7 @@ export default {
 
     > .btn-panel {
       opacity: 0;
+      pointer-events: none;
     }
 
     > .controller-lv1 {
@@ -322,5 +357,120 @@ export default {
   position: fixed;
   bottom: 0;
   width: 100%;
+
+  > .panel {
+    position: fixed;
+    background-color: rgba(0, 0, 0, .5);
+    width: auto;
+    max-width: 500px;
+    min-width: 180px;
+    z-index: 4009;
+    border-radius: 8px;
+    backdrop-filter: saturate(150%) contrast(80%) blur(3px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -90%);
+    text-align: center;
+    line-height: 2em;
+    transition: opacity .2s;
+
+    &.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    > .title {
+      height: 48px;
+      border-bottom: 1px solid rgba(255, 255, 255, .2);
+      padding: 0 15px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      color: #fff;
+
+      &::before {
+        content: "";
+        background: url(@/assets/panel.png) no-repeat scroll center center;
+        background-size: 100%;
+        width: 24px;
+        height: 24px;
+        margin-right: 6px;
+      }
+
+      > span {
+        position: absolute;
+        right: 10px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:active:hover {
+          scale: 0.8;
+        }
+
+        > svg {
+          fill: #ffffffcc;
+          transition: scale .2s;
+        }
+      }
+    }
+
+    > .body {
+      padding: 10px 12px;
+      width: max-content;
+      max-width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      > .btn-function {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        transition: scale .2s;
+
+        &:active:hover {
+          scale: 0.9;
+        }
+
+        > div {
+          background-size: 100%;
+          width: 48px;
+          height: 48px;
+        }
+
+        > span {
+          color: #ffffff;
+          font-size: 12px;
+        }
+
+        & + .btn-function {
+          margin-left: 12px;
+        }
+      }
+
+      .fullscreen {
+        background-image: url(@/assets/fullscreen.png);
+      }
+
+      .vr {
+        background-image: url(@/assets/vrmode.png);
+      }
+
+      .gyro {
+        background-image: url(@/assets/gyro.png);
+      }
+
+      .music {
+        background-image: url(@/assets/bgmusic.png);
+      }
+
+      .commentary {
+        background-image: url(@/assets/music.png);
+      }
+    }
+  }
 }
 </style>

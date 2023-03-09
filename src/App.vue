@@ -22,5 +22,6 @@ export default {
     height: 100vh;
     background: url("@/assets/bg.jpg") no-repeat;
     background-size: cover;
+    user-select: none;
 }
 </style>
