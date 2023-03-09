@@ -80,7 +80,6 @@ export default {
             currentPos: {},
             Yb: 0,
             Xb: 0,
-            touching: false,
             oldDeg: 0,
             currentMenu: undefined,
         }
