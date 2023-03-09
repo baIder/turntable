@@ -24,5 +24,8 @@ export default {
     background-size: cover;
     user-select: none;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 </style>

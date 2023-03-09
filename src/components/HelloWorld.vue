@@ -68,6 +68,7 @@
 import {mockData} from '@/data'
 import {toggleActive} from '@/utils/toggleActive'
 import SvgClose from '@/components/SvgClose.vue'
+import {nextTick} from 'vue'
 
 export default {
     name: 'HelloWorld',
@@ -95,6 +96,7 @@ export default {
             })
             this.$refs.dataArea.style.rotate = '-' + ev.target.dataset.rotate + 'deg'
             this.$refs.dataPos.style.rotate = '0deg'
+            this.bindTouchEvent('pos')
         },
         handlePosClick(id, ev) {
             this.currentPos = this.currentArea.children.find(i => i.id === id)
@@ -164,11 +166,26 @@ export default {
             document.removeEventListener('touchend', this.handleTouchEnd)
             this.currentMenu.classList.remove('on-touch')
         },
+        bindTouchEvent(menuType) {
+            let areaArr
+            if (menuType !== 'pos') {
+                areaArr = Array.from(this.$refs.areaRefs)
+                areaArr.forEach(el => {
+                    el.addEventListener('touchstart', this.handleTouchStart)
+                })
+            }
+            nextTick(() => {
+                areaArr = Array.from(this.$refs.posRefs)
+                areaArr.forEach(el => {
+                    el.addEventListener('touchstart', this.handleTouchStart)
+                })
+            })
+        },
         init() {
             this.areaArr = mockData()
             this.currentArea = this.areaArr[0]
             this.currentPos = this.currentArea.children[0]
-            this.$nextTick(() => {
+            nextTick(() => {
                 this.$refs.dataArea.children[0].classList.add('active')
                 this.$refs.dataPos.children[0].classList.add('active')
                 this.calcAreaDeg()
@@ -176,14 +193,7 @@ export default {
                 setTimeout(() => {
                     this.$refs.menuRef.classList.remove('init')
                 }, 100)
-                let areaArr = Array.from(this.$refs.areaRefs)
-                areaArr.forEach(el => {
-                    el.addEventListener('touchstart', this.handleTouchStart)
-                })
-                areaArr = Array.from(this.$refs.posRefs)
-                areaArr.forEach(el => {
-                    el.addEventListener('touchstart', this.handleTouchStart)
-                })
+                this.bindTouchEvent()
             })
         },
     },
