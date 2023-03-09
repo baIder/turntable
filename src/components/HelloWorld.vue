@@ -1,6 +1,6 @@
 <template>
     <div class="root">
-        <div class="menu-wrapper" ref="menuRef">
+        <div class="menu-wrapper init" ref="menuRef">
             <div class="menu data-area" ref="dataArea">
                 <span
                         v-for="(item) in areaArr"
@@ -108,6 +108,9 @@ export default {
                 this.$refs.dataPos.children[0].classList.add('active')
                 this.calcAreaDeg()
                 this.calcPosDeg()
+                setTimeout(() => {
+                    this.$refs.menuRef.classList.remove('init')
+                }, 100)
             })
         },
     },
@@ -122,30 +125,6 @@ export default {
   position: relative;
   transition: all .5s ease-in-out;
   transform: translateY(14vh);
-
-  &.hidden {
-    transform: translateY(20vh);
-
-    > .menu {
-      height: .1vh;
-    }
-
-    > .btn-panel {
-      opacity: 0;
-    }
-
-    > .controller-lv1 {
-      backdrop-filter: saturate(150%) contrast(80%) blur(3px);
-    }
-
-    > .controller-lv2 {
-      height: .1vh;
-    }
-
-    > .controller-lv3 {
-      height: .1vh;
-    }
-  }
 
   > .data-area {
     height: 32vh;
@@ -287,6 +266,54 @@ export default {
       text-align: center;
       font-size: 1.4vh;
       width: max-content;
+    }
+  }
+
+  &.init {
+    transform: translateY(30vh);
+
+    > .menu {
+      height: .1vh;
+    }
+
+    > .btn-panel {
+      opacity: 0;
+    }
+
+    > .controller-lv1 {
+      backdrop-filter: saturate(150%) contrast(80%) blur(3px);
+    }
+
+    > .controller-lv2 {
+      height: .1vh;
+    }
+
+    > .controller-lv3 {
+      height: .1vh;
+    }
+  }
+
+  &.hidden {
+    transform: translateY(20vh);
+
+    > .menu {
+      height: .1vh;
+    }
+
+    > .btn-panel {
+      opacity: 0;
+    }
+
+    > .controller-lv1 {
+      backdrop-filter: saturate(150%) contrast(80%) blur(3px);
+    }
+
+    > .controller-lv2 {
+      height: .1vh;
+    }
+
+    > .controller-lv3 {
+      height: .1vh;
     }
   }
 }
