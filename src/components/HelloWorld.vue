@@ -3,7 +3,7 @@
         <div class="menu-wrapper init" ref="menuRef">
             <div class="menu data-area" ref="dataArea">
                 <span
-                        v-for="(item) in areaArr"
+                        v-for="item in areaArr"
                         :key="item.id"
                         @click="handleAreaClick(item.id,$event)"
                         class="text-wrapper"
@@ -15,16 +15,12 @@
             </div>
             <div class="menu data-pos" ref="dataPos">
                 <span
-                        v-for="(item,index) in currentArea.children"
+                        v-for="item in currentArea.children"
                         :key="item.id"
                         @click="handlePosClick(item.id,$event)"
-                        :style="{rotate:`${19*index}deg`}"
-                        :data-rotate="19*index"
                         class="text-wrapper"
                 >
-                    <span
-                            :data-rotate="19*index"
-                    >
+                    <span>
                         {{ item.name }}
                     </span>
                 </span>
@@ -104,7 +100,6 @@ export default {
             this.$refs.menuRef.classList.toggle('hidden')
         },
         togglePanel() {
-            console.log(1)
             this.$refs.panelRef.classList.toggle('hidden')
         },
         calcPosDeg() {
@@ -208,10 +203,15 @@ export default {
         position: relative;
       }
 
+      > span {
+        transition: all 1s ease-in-out;
+      }
+
       > &.active {
         > span {
           color: white;
           font-weight: 700;
+          transform: translateY(-7px);
 
           &::after {
             content: "";
