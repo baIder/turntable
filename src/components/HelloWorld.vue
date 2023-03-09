@@ -226,7 +226,7 @@ export default {
           @if (($j==1) or ($j==6)) {
             transform: translateY(3px) rotate(#{-2 * $i + 4 * $j - 3}deg);
           } @else if (($j==2) or ($j==5)) {
-            transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
+            transform: translateY(1px) rotate(#{-2 * $i + 4 * $j - 2}deg);
           } @else {
             transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
           }
@@ -309,7 +309,7 @@ export default {
       > &.active {
         > div {
           color: white;
-          font-weight: 700;
+          font-weight: 500;
           transform: translateY(-7px);
 
           &::after {
@@ -321,7 +321,7 @@ export default {
             border-radius: 110px 0 110px 0;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 3px;
+            bottom: 1px;
           }
         }
       }
