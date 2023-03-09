@@ -173,7 +173,7 @@ export default {
         }
         @if ($i==6) {
           @if (($j==1) or ($j==6)) {
-            transform: translateY(3px) rotate(#{-2 * $i + 4 * $j - 2}deg);
+            transform: translateY(3px) rotate(#{-2 * $i + 4 * $j - 3}deg);
           } @else if (($j==2) or ($j==5)) {
             transform: rotate(#{-2 * $i + 4 * $j - 2}deg);
           } @else {
@@ -188,8 +188,11 @@ export default {
 .text {
   > span {
     pointer-events: none;
-    transform-origin: 50% 100%;
     display: inline-block;
+  }
+
+  span + span {
+    margin-left: 1px;
   }
 }
 
